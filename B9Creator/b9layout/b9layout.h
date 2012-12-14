@@ -67,9 +67,6 @@ signals:
     void eventHiding();
 
 
-
-
-
 public slots:
 
 	//debug interface

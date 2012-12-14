@@ -150,7 +150,6 @@ QString B9Layout::Open()
          msgBox.setDefaultButton(QMessageBox::Save);
         int ret = msgBox.exec();
 
-
         switch (ret)
         {
           case QMessageBox::Save:
@@ -166,7 +165,6 @@ QString B9Layout::Open()
               break;
         }
     }
-
 
 
 	QString filename = QFileDialog::getOpenFileName(this,
@@ -186,7 +184,7 @@ QString B9Layout::Open()
     UpdateBuildSpaceUI();
 
 
-    QApplication::setOverrideCursor(Qt::ArrowCursor);
+    QApplication::restoreOverrideCursor();
 	if(!success)
 	{
         QMessageBox::warning(this, tr("B9Layout"), tr("Unable To Open Layout"),QMessageBox::Ok);
@@ -487,6 +485,12 @@ ModelInstance* B9Layout::AddModel(QString filepath)
 		if(filepath.isEmpty())
 			return NULL;
 	}
+    //by this point we should have a valid file path, if we dont - abort.
+    if(!QFileInfo(filepath).exists())
+    {
+        return NULL;
+    }
+
 	//if the file has already been opened and is in the project, we dont want to load in another! instead we want to make a new instance
     for(unsigned int i = 0; i < ModelDataList.size(); i++)
 	{
@@ -552,7 +556,6 @@ void B9Layout::CleanModelData()
 			delete ModelDataList[m];
 		}
 	}
-
 	ModelDataList.clear();
 	ModelDataList = templist;
 }
@@ -776,6 +779,7 @@ std::vector<ModelInstance*> B9Layout::GetSelectedInstances()
 	}
 	return insts;
 }
+
 void B9Layout::DeleteSelectedInstances()
 {
     unsigned int i;
@@ -791,13 +795,7 @@ void B9Layout::DeleteSelectedInstances()
 }
 
 
-
 //printing..
-
-
-
-
-
 void B9Layout::SliceWorld()
 {
     QSettings settings;
@@ -1067,19 +1065,13 @@ void B9Layout::SliceWorldToSlc(QString filename)
 }
 
 
-
 void B9Layout::CancelSlicing()
 {
 	cancelslicing = true;
 }
-
-
-
-
 //////////////////////////////////////////////////////
 //Private
 //////////////////////////////////////////////////////
-
 
 
 ///////////////////////////////////////////////////

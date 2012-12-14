@@ -68,7 +68,7 @@ public:
 	unsigned int displaylistindx;
 
 	//geometry
-	std::vector<Triangle3D> triList;
+    std::vector<Triangle3D> triList;
 	QVector3D maxbound;
 	QVector3D minbound;
 
@@ -87,7 +87,7 @@ private:
 	const aiScene* pScene;
 
 	//render
-	void FormDisplayList();
+    int FormDisplayList();
 	
 };
 #endif

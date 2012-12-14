@@ -63,18 +63,24 @@
 	}
 	bool ProjectData::Open(QString filepath) //returns success
 	{
+
 		bool jumpout = false;
 
 		double resx;
 		double resy;
-		
-		//input file operations here TODO
+
+        QSettings settings;
+
+        //input file operations here
 		QFile file(filepath);
-		QString buff;
+        QString buff;//for io operations
+        QString modelpath;//current model this function is trying to load.
 		if(!file.open(QIODevice::ReadOnly))
 		{
 			return false;
-		}
+        }
+        SetDirtied(false);//presumably good from here so undirty the project
+
 		QTextStream in(&file);//begin text streaming.
         mfilename = in.readLine();//get project name
 		
@@ -86,7 +92,8 @@
 			
 			if(buff != "endinstancelist")
 			{
-				ModelInstance* inst = pMain->AddModel(buff);
+                modelpath = buff;
+                ModelInstance* pinst = pMain->AddModel(modelpath);//inst will be null if it cant find the file.
 				
 				in >> buff;
 				double xp = buff.toDouble(); in >> buff;
@@ -100,11 +107,52 @@
 				double xs = buff.toDouble(); in >> buff;
 				double ys = buff.toDouble(); in >> buff;
 				double zs = buff.toDouble();
-			
-				inst->SetPos(QVector3D(xp,yp,zp));
-				inst->SetRot(QVector3D(xr,yr,zr));
-				inst->SetScale(QVector3D(xs,ys,zs));
-                inst->UpdateBounds();//in order that zhieght is good and all.
+
+                if(pinst == NULL)
+                {
+                    SetDirtied(true);
+                    //1st chance to relocate the model..look in working directory.
+                    QString modelfilename = QFileInfo(modelpath).fileName();
+                    pinst = pMain->AddModel(QFileInfo(filepath).absolutePath() + "/" + modelfilename);
+
+                    if(pinst == NULL)//2nd chance popup dialog asking if the user wants to manually find the file.
+                    {
+                         QApplication::restoreOverrideCursor();
+                         QMessageBox msgBox;
+                         msgBox.setText("the model: " + modelfilename + "can not be located");
+                         msgBox.setInformativeText("Do you want to locate it manually?");
+                         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Discard);
+                         msgBox.setDefaultButton(QMessageBox::Yes);
+                         int response = msgBox.exec();
+                         if(response == QMessageBox::Yes)
+                         {
+                             QString correctedfilepath = QFileDialog::getOpenFileName(0, QString("Locate File: " + modelfilename),
+                         settings.value("WorkingDir").toString(),QString(modelfilename+"(*" + QFileInfo(modelfilename).suffix() + ")"));
+                             if(!correctedfilepath.isEmpty())
+                             {
+                                 pinst = pMain->AddModel(correctedfilepath);
+
+                             }
+
+
+                             if(pinst == NULL)//otherwise the user failed to find one
+                             {
+                                 QMessageBox msgBox;
+                                 msgBox.setText("substitute file unable to be inported.");
+                                 msgBox.exec();
+                             }
+
+
+                         }
+                    }
+                }
+                if(pinst != NULL)
+                {
+                    pinst->SetPos(QVector3D(xp,yp,zp));
+                    pinst->SetRot(QVector3D(xr,yr,zr));
+                    pinst->SetScale(QVector3D(xs,ys,zs));
+                    pinst->UpdateBounds();//in order that zhieght is good and all.
+                }
 			}
 			else
 			{
@@ -119,7 +167,7 @@
 		SetResolution(QVector2D(resx,resy));
 		CalculateBuildArea();
 
-		SetDirtied(false);
+
         mfilename = filepath;
 		emit ProjectLoaded();
 		return true;

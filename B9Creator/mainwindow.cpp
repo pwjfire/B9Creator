@@ -90,7 +90,7 @@ MainWindow::~MainWindow()
 void MainWindow::showSplash()
 {
     if(m_pSplash!=NULL){
-        m_pSplash->showMessage("Version 1.1.beta\n"
+        m_pSplash->showMessage("Version 1.3.beta\n"
                                "Visit www.b9creator.com for support.\n"
                                "Copyright 2012 - B9Creations, LLC",Qt::AlignTop|Qt::AlignRight,Qt::yellow);
         m_pSplash->show();
@@ -101,7 +101,7 @@ void MainWindow::showSplash()
 void MainWindow::showAbout()
 {
     if(m_pSplash!=NULL){
-        m_pSplash->showMessage("Version 1.1.beta\n"
+        m_pSplash->showMessage("Version 1.3.beta\n"
                                "Visit www.b9creator.com for support.\n"
                                "Copyright 2012 - B9Creations, LLC",Qt::AlignTop|Qt::AlignRight,Qt::yellow);
         m_pSplash->show();

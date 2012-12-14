@@ -278,12 +278,12 @@ void ModelInstance::BakeGeometry()
 	for(t = 0;t < pData->triList.size(); t++)
 	{
 		
-		Triangle3D* pNewTri = new Triangle3D(pData->triList[t]);
+        Triangle3D* pNewTri = new Triangle3D(pData->triList[t]);
 		
 		for(v=0;v<3;v++)
 		{
 			//scale first
-			pNewTri->vertex[v] += (pData->triList[t].vertex[v]*(scale - QVector3D(1,1,1)));
+            pNewTri->vertex[v] += (pData->triList[t].vertex[v]*(scale - QVector3D(1,1,1)));
 
 			//Rotate second
 			RotateVector(pNewTri->vertex[v],rot.z(),QVector3D(0,0,1));//z
@@ -327,19 +327,20 @@ void ModelInstance::BakeGeometry()
 		{
 			this->minbound.setZ(pNewTri->minBound.z());
 		}
-		
-		triList.push_back(pNewTri);
+
+        triList.push_back(pNewTri);
 	}
 
-
+    qDebug() << "Baked instance";
 }
 void ModelInstance::UnBakeGeometry()
 {
-    for(unsigned int i=0;i<triList.size();i++)
+    for(unsigned long int i=0;i<triList.size();i++)
 	{
 		delete triList[i];
 	}
 	triList.clear();
+    qDebug() << "Unbaked instance";
 }
 void ModelInstance::UpdateBounds()
 {
