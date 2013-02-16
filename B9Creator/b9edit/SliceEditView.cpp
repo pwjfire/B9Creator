@@ -205,7 +205,7 @@ void SliceEditView::DeCompressIntoContext()
 	if(currSlice <= 0)//make "base" image
 	{
 		botImg = QImage(topImg.width(),topImg.height(),QImage::Format_RGB16);
-		botImg.fill(QColor(255,255,255));
+		botImg.fill(QColor(255,255,255).rgb());
 	}
 	else
 	{

@@ -88,7 +88,7 @@ void SimpleSupport::draw(QImage* pImage) {
 
 QImage SimpleSupport::getCursorImage(){
 	QImage cursor(32,32,QImage::Format_ARGB32);
-	cursor.fill(QColor(0,0,0,0));
+	cursor.fill(QColor(0,0,0,0).rgb());
 	draw(&cursor);
 	return cursor;
 }

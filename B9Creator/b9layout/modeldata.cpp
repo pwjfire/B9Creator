@@ -189,9 +189,9 @@ bool ModelData::LoadIn(QString filepath)
         case GL_INVALID_VALUE:
             msgBox.setText("OpenGL Error:  GL_INVALID_VALUE");
             break;
-        case GL_INVALID_FRAMEBUFFER_OPERATION:
-            msgBox.setText("OpenGL Error:  GL_INVALID_FRAMEBUFFER_OPERATION");
-            break;
+//        case GL_INVALID_FRAMEBUFFER_OPERATION:
+//            msgBox.setText("OpenGL Error:  GL_INVALID_FRAMEBUFFER_OPERATION");
+//            break;
         case GL_STACK_UNDERFLOW:
             msgBox.setText("OpenGL Error:  GL_STACK_UNDERFLOW");
             break;
